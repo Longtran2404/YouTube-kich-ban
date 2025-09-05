@@ -1,0 +1,71 @@
+.floating-orbs {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px); /* Giảm blur để tối ưu performance */
+  opacity: 0.3; /* Giảm opacity để nhẹ hơn */
+  animation: float 30s infinite ease-in-out; /* Tăng thời gian animation để mượt hơn */
+  will-change: transform; /* Tối ưu GPU acceleration */
+}
+
+.orb-1 {
+  width: 250px; /* Giảm size */
+  height: 250px;
+  background: radial-gradient(circle, rgba(138, 43, 226, 0.6), rgba(75, 0, 130, 0.3));
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(0, 123, 255, 0.5), rgba(25, 25, 112, 0.2));
+  top: 60%;
+  right: 15%;
+  animation-delay: -10s;
+}
+
+.orb-3 {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 20, 147, 0.4), rgba(139, 0, 139, 0.2));
+  bottom: 20%;
+  left: 20%;
+  animation-delay: -20s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) rotate(90deg);
+  }
+  50% {
+    transform: translateY(10px) translateX(-10px) rotate(180deg);
+  }
+  75% {
+    transform: translateY(-5px) translateX(15px) rotate(270deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .orb {
+    filter: blur(40px);
+  }
+  
+  .orb-1, .orb-2, .orb-3, .orb-4, .orb-5 {
+    width: 150px;
+    height: 150px;
+  }
+}
