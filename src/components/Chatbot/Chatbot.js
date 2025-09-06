@@ -13,6 +13,7 @@ const Chatbot = () => {
   ]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -32,6 +33,7 @@ const Chatbot = () => {
   ];
 
   const handleQuickReply = (reply) => {
+    if (isSending || isTyping) return;
     handleSendMessage(reply);
   };
 
@@ -91,6 +93,7 @@ const Chatbot = () => {
 
   const handleSendMessage = async (messageText = inputText) => {
     if (!messageText.trim()) return;
+    if (isSending) return;
 
     const userMessage = {
       id: messages.length + 1,
@@ -102,6 +105,7 @@ const Chatbot = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
     setIsTyping(true);
+    setIsSending(true);
 
     try {
       // Đợi response từ N8N trước
@@ -128,6 +132,7 @@ const Chatbot = () => {
         
         setMessages(prev => [...prev, botResponse]);
         setIsTyping(false);
+        setIsSending(false);
       }, 500 + Math.random() * 1000);
 
     } catch (error) {
@@ -143,11 +148,13 @@ const Chatbot = () => {
         
         setMessages(prev => [...prev, botResponse]);
         setIsTyping(false);
+        setIsSending(false);
       }, 500);
     }
   };
 
   const handleKeyPress = (e) => {
+    if (isSending || isTyping) return;
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -212,6 +219,7 @@ const Chatbot = () => {
                   key={index}
                   className="quick-reply-btn"
                   onClick={() => handleQuickReply(reply)}
+                  disabled={isSending || isTyping}
                 >
                   {reply}
                 </button>
@@ -225,10 +233,11 @@ const Chatbot = () => {
                 onKeyPress={handleKeyPress}
                 placeholder="Nhập câu hỏi của bạn..."
                 rows="1"
+                disabled={isSending || isTyping}
               />
               <button 
                 onClick={() => handleSendMessage()}
-                disabled={!inputText.trim()}
+                disabled={!inputText.trim() || isSending || isTyping}
                 className="send-btn"
               >
                 📤
